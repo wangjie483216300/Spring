@@ -1,0 +1,105 @@
+package com.CloudDinner;
+
+import org.springframework.beans.factory.BeanFactory;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
+
+public class beanFactory {
+
+    private static Properties props;
+
+    static {
+        try {
+            //实例化对象
+            props = new Properties();
+            //获取properties文件流对象
+            InputStream in =beanFactory.class.getClassLoader().getResourceAsStream("bean.properties");
+            props.load(in);
+        } catch (Exception e) {
+            throw new ExceptionInInitializerError("初始化properties失败!");
+        }
+    }
+
+    /**
+     * 根据bean的名称获取bean对象
+     * @param beanName
+     * @return
+     */
+    public static Object getBean(String beanName){
+        Object bean = null;
+        try {
+            //获取反射的路径
+            String beanPath = props.getProperty(beanName);
+            System.out.println(beanPath);
+            //使用反射创建对象
+            bean=Class.forName(beanPath).newInstance();//每次调用默认构造函数创建对象
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bean;
+    }
+}
+
+
+
+
+
+
+
+
+package com.CloudDinner;
+
+import com.CloudDinner.Service.Impl.UserInfoImpl;
+import com.CloudDinner.Service.UserInfoServer;
+import org.apache.ibatis.parsing.PropertyParser;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.prefs.PreferenceChangeEvent;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception{
+        /**读取xml就立即创建对象---单例*/
+//        ApplicationContext ac = new  ClassPathXmlApplicationContext("ApplicationContext.xml");
+//        UserInfoImpl UserInfoImpl = (UserInfoImpl)ac.getBean("UserInfoImpl");
+        /**读取完不立即创建,使用时才创建----多例*/
+//        Resource resource = new ClassPathResource("ApplicationContext.xml");
+//        BeanFactory beanFactory = new XmlBeanFactory(resource);
+//        UserInfoImpl UserInfoImpl = (UserInfoImpl)beanFactory.getBean("UserInfoImpl");
+//        UserInfoImpl.save();
+        //注册驱动
+//        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+          //使用反射来创建对象
+//        Class.forName("com.mysql.cj.jdbc.Driver");
+//        //获取连接
+//        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/springtest","wangjie","123456");
+//        //获取操作数据库的预处理对象
+//        PreparedStatement pstm = conn.prepareStatement("select * from user_info");
+//        //执行sql,得到结果集
+//        ResultSet re = pstm.executeQuery();
+//        //遍历结果集
+//        while (re.next()){
+//            System.out.println(re.getString("ID"));
+//        }
+//        //关闭连接
+//        re.close();
+//        pstm.close();
+//        conn.close();
+        UserInfoServer us=null;
+        for (int i=0;i<5;i++){
+             us= (UserInfoServer)beanFactory.getBean("UserInfoServer");
+            System.out.println(us);
+        }
+        us.save();
+    }
+}
+
+
