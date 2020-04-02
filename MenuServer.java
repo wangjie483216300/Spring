@@ -3,12 +3,13 @@ package com.CloudDinner.Service;
 import com.CloudDinner.Dao.MenuDao;
 import com.CloudDinner.Model.MENU_TABLE;
 import com.CloudDinner.Model.Message.MENU_Message;
+import com.alibaba.fastjson.JSONObject;
+import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.UsesSunHttpServer;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MenuServer {
@@ -145,6 +146,7 @@ public class MenuServer {
         String Message = "";
         try {
             int status  = menuDao.deleteMAIN_FOOD(menu_table);
+            System.out.println(status);
             if(status == 1){
                 Message = "操作成功!" ;
             }else {
